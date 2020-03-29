@@ -33,3 +33,26 @@
 ### 5주차 : 진행자 정민정님, 이다솜님 (without 퍼실)
 + Clean Code in Python 6장
 + Effective Python 3장
+
+### 6주차 : 진행자 서미지님, 정경훈님
++ Clean Code in Python 7장
++ Effective Python 4장
+
+### 7주차 : 진행자 퍼실
++ 복습
+
+### 8주차 : 진행자 임한동님, 서미지님
++ Clean Code in Python 8장
++ Effective Python 5장
+
+### 9주차 : 진행자 김보섭님, 퍼실
++ Clean Code in Python 9장
++ Effective Python 6장
+
+### 10주차 : 진행자 정경훈님, 김경수님, 퍼실 
++ Clean Code in Python 10장
++ Effective Python 7, 8장
+
+### 11주차 : 퍼실
++ 복습
+
