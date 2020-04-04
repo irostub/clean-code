@@ -31,6 +31,7 @@ async def convert_json2dict(agen_files):
 
     async for afile in agen_files:
         multi_line_jsons = await (afile)
+
         for line in multi_line_jsons.splitlines():
             for key, value in json.loads(line).items():
                 dd[key].append(value)

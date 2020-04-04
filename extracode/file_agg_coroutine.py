@@ -19,12 +19,12 @@ def load_jsonfiles(files):
         yield from load_jsonfile(file)
 
 
-def convert_json_to_dict(jsons):
+def convert_json_to_dict(json_gen):
     """ Appends json context to default dictionery """
 
     dd = defaultdict(list)
 
-    for json_context in jsons:
+    for json_context in json_gen:
         for key, value in json.loads(json_context).items():
             dd[key].append(value)
 
