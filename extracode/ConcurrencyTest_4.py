@@ -20,38 +20,38 @@ async def load_jsonfile(file):
         return await afp.read()
 
 
-async def load_jsonfiles(files):
-    for file in files:
-        return await load_jsonfile(file)
+async def convert_onefile(file: Path, dd: defaultdict):
+    context = await load_jsonfile(file)
 
-
-async def convert_json2dict(multi_json_lines):
-    """ Appends json context to default dictionery """
-    dd = defaultdict(list)
-
-    for line in multi_json_lines.splitlines():
+    for line in context.splitlines():
         for key, value in json.loads(line).items():
             dd[key].append(value)
 
-    return dd
 
+async def convert_allfiles():
+    file_list = path.glob("*.json")
+    dd = defaultdict(list)
 
-@clock()
-async def main():
-    files = path.glob("*.json")
+    to_do = [convert_onefile(file, dd) for file in file_list]
+    await asyncio.gather(*to_do)
 
-    df = await convert_json2dict(await load_jsonfiles(files))
-
-    pdf = pd.DataFrame(df)
+    pdf = pd.DataFrame(dd)
     print(len(pdf))
     print(pdf.head())
 
 
-if __name__ == "__main__":
+def main():
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(main())
+        t0 = time.time()
+        loop.run_until_complete(convert_allfiles())
+        print(f"Main function finished in {time.time() - t0:.2f} sec")
+
     finally:
         # Shutting down and closing file descriptors after interrupt
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
+
+
+if __name__ == "__main__":
+    main()

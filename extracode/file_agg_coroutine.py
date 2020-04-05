@@ -11,6 +11,8 @@ path = Path("./data")
 
 def load_jsonfile(file):
     with open(file, "r", encoding="UTF-8") as fp:
+        # for line in fp:
+        #     yeild fp
         yield from fp
 
 
@@ -38,6 +40,7 @@ def main():
     df = convert_json_to_dict(load_jsonfiles(files))
 
     pdf = pd.DataFrame(df)
+    print(len(pdf))
     print(pdf.head())
 
 

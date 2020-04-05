@@ -135,3 +135,6 @@ dmypy.json
 .autoenv.leave
 .autoenv
 
+# profile
+*_output.png
+*.pstats
