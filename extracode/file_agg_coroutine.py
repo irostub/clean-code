@@ -1,50 +1,60 @@
-import time
 import asyncio
 import json
-import pandas as pd
-from pathlib import Path
+import time
 from collections import defaultdict
+from pathlib import Path
+
+import pandas as pd
+import uvloop
+from aiofile import AIOFile, LineReader
+from tqdm import tqdm
+
+import log
 from clock import clock
 
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 path = Path("./data")
 
 
-def load_jsonfile(file):
-    with open(file, "r", encoding="UTF-8") as fp:
-        # for line in fp:
-        #     yeild fp
-        yield from fp
+async def load_jsonfile(file):
+    async with AIOFile(file, "r", encoding="UTF-8") as afp:
+        return await afp.read()
 
 
-def load_jsonfiles(files):
-    for file in files:
-        yield from load_jsonfile(file)
-
-
-def convert_json_to_dict(json_gen):
-    """ Appends json context to default dictionery """
+async def convert_onefile(file: Path):
+    context = await load_jsonfile(file)
 
     dd = defaultdict(list)
-
-    for json_context in json_gen:
-        for key, value in json.loads(json_context).items():
+    for line in context.splitlines():
+        for key, value in json.loads(line).items():
             dd[key].append(value)
 
     return dd
 
 
-@clock()
-def main():
+async def convert_allfiles():
+    file_list = path.glob("*.json")
 
-    files = path.glob("*.json")
-    df = convert_json_to_dict(load_jsonfiles(files))
+    to_do = (convert_onefile(file) for file in file_list)
+    default_dicts = await asyncio.gather(*to_do)
 
-    pdf = pd.DataFrame(df)
-    print(len(pdf))
+    pdf = pd.concat([pd.DataFrame(dd) for dd in default_dicts])
     print(pdf.head())
+    print(len(pdf))
+
+
+def main():
+    loop = asyncio.get_event_loop()
+    try:
+        t0 = time.time()
+        loop.run_until_complete(convert_allfiles())
+        print(f"Main function finished in {time.time() - t0:.2f} sec")
+
+    finally:
+        # Shutting down and closing file descriptors after interrupt
+        loop.run_until_complete(loop.shutdown_asyncgens())
+        loop.close()
 
 
 if __name__ == "__main__":
-    t0 = time.time()
     main()
-    print(f"Main function finished in {time.time() - t0:.2f} sec")
