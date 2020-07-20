@@ -21,7 +21,7 @@ Not every principle herein has to be strictly followed, and even fewer will be u
 Python Script is Based on JavaScript Version Documents. Targets Python3.7+
 
 
-# Clean Code for Python
+## Clean Code for Python
 
 Jupyter Notebook files are not based on Robert C Martin"s book, but Mariano Anaya"s book **[Clean Code in Python](https://www.amazon.com/Clean-Code-Python-Refactor-legacy/dp/1788835832/ref=sr_1_1?dchild=1&keywords=clean+code+Python&qid=1595241022&s=books&sr=1-1)** koren edition.
 
